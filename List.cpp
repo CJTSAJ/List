@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 using namespace std;
 
 class Node//½ÚµãÀà
@@ -150,8 +151,15 @@ bool List::split(int pos, List&new_list)
 void List::combine(List& append_list)
 {
 	now = head;
+	append_list.now = append_list.head;
 	for (int i = 0; i < size - 1; i++)now = now->next;
-	now->next = append_list.head;
+	for (int i = 0; i < append_list.size; i++)
+	{
+		then = new Node(append_list.now->value);
+		now->next = then;
+		now = then;
+		append_list.now = append_list.now->next;
+	}
 	size += append_list.length();
 }
 
@@ -169,7 +177,7 @@ void List::print_all()
 List::~List()
 {
 	now = head;
-	for (int i = 0; i < size-1; i++)
+	for (int i = 0; i < size; i++)
 	{
 		then = now->next;
 		delete now;
@@ -179,15 +187,16 @@ List::~List()
 
 int main()
 {
-	int arr[6] = { 2,3,3,4,3,5 };
-	int ar[3] = { 10,22,33 };
-	List list1(arr, 6);
-	List list2(ar, 3);
-	list1.combine(list2);
-	list1.insert(3, 6);
+	fstream file("CJT.txt");
+	int num;
+	vector<int> v;
+	while (!file.eof())
+	{
+		file >> num;
+		v.push_back(num);
+	}
+	List list1(v);
 	list1.print_all();
-	cout << list1.remove(3) << endl;
-	cout << list1.length() << endl;
 	return 0;
 }
 
